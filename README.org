@@ -3,6 +3,8 @@
 Dispatcher can control you goroutine number.
 
 The dispatcher contains a worker pool and a job queue. It will assign the job to the worker. After the task is completed, the worker will return it to the worker pool. When there is no worker in the worker pool, the job will be stored in the job queue. When the queue reaches its maximum value, the new job will be discarded directly.
+
+[[./dispatcher.png]]
 ** How to use Dispatcher?
 #+BEGIN_SRC go
 package main
