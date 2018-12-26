@@ -1,0 +1,41 @@
+* Dispatcher
+** What is Dispatcher?
+Dispatcher can control you goroutine number.
+The dispatcher contains a worker pool and a job queue. It will assign the job to the worker. After the task is completed, the worker will return it to the worker pool. When there is no worker in the worker pool, the job will be stored in the job queue. When the queue reaches its maximum value, the new job will be discarded directly.
+** How to use Dispatcher?
+#+BEGIN_SRC go
+package main
+
+import (
+	"log"
+	"time"
+
+	"github.com/haormj/util/routine"
+)
+
+type HelloJob struct{}
+
+func (*HelloJob) Do() {
+	time.Sleep(time.Second * 4)
+	log.Println("done")
+}
+
+func main() {
+	// the number of goroutines
+	maxWorkers := 1
+	// the total of cache jobs
+	maxJobs := 2
+	d := routine.NewDispatcher(maxWorkers, maxJobs)
+	d.Run()
+
+	for {
+		helloJob := HelloJob{}
+		if d.Add(&helloJob) {
+			log.Println("add job successfully")
+		} else {
+			log.Println("add job failed")
+		}
+		time.Sleep(time.Second)
+	}
+}
+#+END_SRC
