@@ -1,5 +1,10 @@
 package dispatcher
 
+import (
+	"log"
+	"runtime/debug"
+)
+
 // Worker represents the worker that executes the job
 type Worker struct {
 	WorkerPool chan chan Job
