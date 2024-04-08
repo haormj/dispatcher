@@ -5,6 +5,7 @@ package dispatcher
 type Dispatcher struct {
 	// A pool of workers channels that are registered with the dispatcher
 	WorkerPool chan chan Job
+
 	maxWorkers int
 	maxJobs    int
 	JobQueue   chan Job
@@ -30,6 +31,11 @@ func (d *Dispatcher) Add(job Job) bool {
 	}
 }
 
+// SyncAdd sync add job, if job queue full will block
+func (d *Dispatcher) SyncAdd(job Job) {
+	d.JobQueue <- job
+}
+
 // Run dispatcher
 func (d *Dispatcher) Run() {
 	// starting n number of workers
@@ -42,9 +48,7 @@ func (d *Dispatcher) Run() {
 }
 
 // Close dispatcher
-func (d *Dispatcher) Close() {
-
-}
+func (d *Dispatcher) Close() {}
 
 // CurrentJobs current job queue
 func (d *Dispatcher) CurrentJobs() int {
